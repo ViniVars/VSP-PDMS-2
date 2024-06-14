@@ -1,3 +1,4 @@
+'use client'
 import Link from "next/link"
 import { CircleUser, Menu, Package2, Search } from "lucide-react"
 
@@ -21,8 +22,21 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { useState } from "react"
+import { addData } from "@/server/action"
 
-export default function Dashboard() {
+export default function page() {
+  async function sData(){
+    let sc = document.querySelector('.sc').value
+    let eqpt = document.querySelector('.eqpt').value
+    let fdel = document.querySelector('.fdel').value
+    let tdel = document.querySelector('.tdel').value
+    let deldate = document.querySelector('.deldate').value
+    let ddel = document.querySelector('.ddel').value
+    if(sc && eqpt && fdel && tdel && deldate && ddel){
+      await addData({sc, eqpt, fdel, tdel, deldate, ddel})
+    }
+  }
   return (
     <div className="flex min-h-screen w-full flex-col">
       <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
@@ -146,7 +160,7 @@ export default function Dashboard() {
       </header>
       <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10">
         <div className="mx-auto grid w-full max-w-6xl gap-2">
-          <h1 className="text-3xl font-semibold">Wanna Add New Delay??</h1>
+          <h1 className="text-3xl font-semibold">( New Delay )</h1>
         </div>
         <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">
           <nav
@@ -167,7 +181,7 @@ export default function Dashboard() {
                 <CardTitle>Delay Date</CardTitle>
               </CardHeader>
               <CardContent>
-                <input className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50" type="date" id="dateInput" name="dateInput" pattern="\d{2}/\d{2}/\d{4}" placeholder="mm/dd/yyyy" required />
+                <input  className="deldate flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50" type="date" id="dateInput" name="dateInput" pattern="\d{2}/\d{2}/\d{4}" placeholder="mm/dd/yyyy" required />
               </CardContent>
             </Card>
             <Card x-chunk="dashboard-04-chunk-2">
@@ -178,8 +192,8 @@ export default function Dashboard() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                  <Input
-                  />
+                <input className="fdel flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50" type="text" />
+                  
               </CardContent>
             </Card>
             <Card x-chunk="dashboard-04-chunk-2">
@@ -190,8 +204,7 @@ export default function Dashboard() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                  <Input
-                  />
+                <input className="tdel flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50" type="text" />
               </CardContent>
             </Card>
             <Card x-chunk="dashboard-04-chunk-2">
@@ -199,8 +212,7 @@ export default function Dashboard() {
                 <CardTitle>Shop Code</CardTitle>
               </CardHeader>
               <CardContent>
-                  <Input
-                  />
+                <input className="sc flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50" type="text" />
               </CardContent>
             </Card>
             <Card x-chunk="dashboard-04-chunk-2">
@@ -208,23 +220,22 @@ export default function Dashboard() {
                 <CardTitle>Equipment</CardTitle>
               </CardHeader>
               <CardContent>
-                  <Input/>
+                <input className="eqpt flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50" type="text" />
               </CardContent>
             </Card>
             <Card x-chunk="dashboard-04-chunk-2">
               <CardHeader>
                 <CardTitle>Delay Description</CardTitle>
-              <CardDescription className="flex gap-2 items-center">
+              <CardDescription className="cd flex gap-2 items-center">
                     Continued Delay?
                     <Checkbox id="include"/>
               </CardDescription>
               </CardHeader>
               <CardContent>
-                  <Input
-                  />
+                <input className="ddel flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50" type="text" />
               </CardContent>
               <CardFooter className="border-t px-6 py-4">
-                <Button>Save</Button>
+                <Button onClick={sData}>Save</Button>
               </CardFooter>
             </Card>
             

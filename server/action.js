@@ -89,3 +89,8 @@ export async function credCheck(uname, pass) {
     }
     return 0
 }
+
+
+export async function addData({sc, eqpt, fdel, tdel, deldate, ddel}){
+    Delay.create({others : {SHOP_CODE : parseInt(sc), EQPT: eqpt, DEL_DATE: deldate, REMARKS : ddel, DELAY_FROM : fdel, DELAY_TO : tdel}})
+}
