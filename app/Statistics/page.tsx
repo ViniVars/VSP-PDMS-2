@@ -82,11 +82,14 @@ export default function Dashboard({ className }: DashboardProps) {
           if (Objlen + 1 == hlist.length) {
             setRep(res !== -1 ? res : false);
           } else {
-
             setRep(false);
           }
         } else {
-          if (Objlen == hlist.length) {0-+          }
+          if (Objlen == hlist.length) {
+            setRep(res !== -1 ? res : false);
+          } else {
+            setRep(false);
+          }
 
         }
       }catch (error) {
