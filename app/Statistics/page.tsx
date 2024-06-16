@@ -19,6 +19,7 @@ import {
   FilePlus,
   FolderPlus
 } from "lucide-react"
+import Swal from 'sweetalert2'
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -45,16 +46,26 @@ import TableDemo from '../Components/table'
 import { Checkbox } from "@/components/ui/checkbox"
 import { Delayhandler } from '../Components/delayhandler'
 import { useToast } from "@/components/ui/use-toast"
+import { DataTableDemo } from "../Components/Newtable"
 
 type DashboardProps = {
   className?: string;
 };
 
-type DataResponse = -1 | Array<{ [key: string]: any }>;
+type ViniProps = {
+  hobj: { [key: string]: any };
+  hlist: Array<string>;
+  ev: number;
+  df: string;
+  dt: string;
+  className?: string;
+};
+
+type DataResponse = -1 | Array<{ [key: string]: any }> | false;
 
 export default function Dashboard({ className }: DashboardProps) {
   const { toast } = useToast()
-  const [rep, setRep] = useState(false);
+  const [rep, setRep] = useState<DataResponse>(false);
   const [tog, setTog] = useState(true);
 
 
@@ -67,7 +78,7 @@ export default function Dashboard({ className }: DashboardProps) {
     setTog((prevTog) => !prevTog);
   }
 
-  async function hhlander(hobj, hlist, ev) {
+  async function hhlander(hobj, hlist, ev, df, dt) {
     console.log('lander', hobj, ev)
     if (hobj == -1 && ev == -1) {
       console.log(rep)
@@ -75,18 +86,31 @@ export default function Dashboard({ className }: DashboardProps) {
     }
     else {
       try {
-        const res = await getData({ ...hobj, hlist, ev });
+        toast({
+          description: "Fetching Data...",
+        })
+        const res = await getData({ ...hobj, hlist, ev, df, dt});
         console.log(res, 'res')
         let Objlen = Object.keys(hobj).length
         if (hlist.includes('CD')) {
           if (Objlen + 1 == hlist.length) {
             setRep(res !== -1 ? res : false);
+            if(res == -1){
+              toast({
+                description: "No Data Found",
+              })
+            }
           } else {
             setRep(false);
           }
         } else {
           if (Objlen == hlist.length) {
             setRep(res !== -1 ? res : false);
+            if(res == -1){
+              toast({
+                description: "No Data Found",
+              })
+            }
           } else {
             setRep(false);
           }
@@ -107,86 +131,37 @@ return (
           <Triangle className="size-6 fill-foreground" />
         </Button>
       </div>
-      <nav className="grid gap-1 p-2">
-        <Tooltip>
+      <nav className="grid gap-5 p-2">
+        <Link href={'#'} className="hover:text-primary">
+        <Tooltip >
           <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-lg"
-              aria-label="Models"
-            >
               <Bot className="size-6" />
-            </Button>
           </TooltipTrigger>
           <TooltipContent side="right" sideOffset={5}>
             Models
           </TooltipContent>
         </Tooltip>
-        <Link href={"/Statistics"}>
+        </Link>
+        <Link href={"#"} className="text-primary">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="rounded-lg bg-muted"
-                aria-label="Playground"
-              >
                 <BarChartBig className="size-6" />
-              </Button>
             </TooltipTrigger>
             <TooltipContent side="right" sideOffset={5}>
               Statistics
             </TooltipContent>
           </Tooltip>
         </Link>
-        <Link href='/AddDelay'>
+        <Link href='/AddDelay' className="hover:text-primary">
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-lg"
-              aria-label="API"
-            >
               <FolderPlus className="size-6" />
-            </Button>
           </TooltipTrigger>
           <TooltipContent side="right" sideOffset={5}>
             AddRecord
           </TooltipContent>
         </Tooltip>
         </Link>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-lg"
-              aria-label="Documentation"
-            >
-              <Book className="size-6" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="right" sideOffset={5}>
-            Documentation
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-lg"
-              aria-label="Settings"
-            >
-              <Settings2 className="size-6" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="right" sideOffset={5}>
-            Settings
-          </TooltipContent>
-        </Tooltip>
       </nav>
       <nav className="mt-auto grid gap-1 p-2">
         <Link href={"/"}>
@@ -249,12 +224,12 @@ return (
               <Delayhandler hhlander={hhlander} />
               <div>
                 {tog ? (
-
+                  
                   <Button
-                    variant="outline"
-                    size="sm"
-                    className="ml-auto gap-1.5 text-sm"
-                    onClick={handleTog}
+                  variant="outline"
+                  size="sm"
+                  className="ml-auto gap-1.5 text-sm"
+                  onClick={handleTog}
                   >
                     <><Table2 className="size-3.5" />Table</>
                   </Button>
@@ -265,9 +240,14 @@ return (
                     size="sm"
                     className="ml-auto gap-1.5 text-sm"
                     onClick={handleTog}
-                  >
+                    >
                     <><BarChartBig className="size-3.5" />Bar Graph</>
                   </Button>
+                )}
+                {rep && (
+                  <>
+                  ( No Of Records : {rep.length} ) 
+                  </>
                 )}
               </div>
             </fieldset>
@@ -287,6 +267,7 @@ return (
                 </div>
               ) : (
                 <div className="tab-con">
+                  {/* <DataTableDemo/> */}
                   <TableDemo res={rep} />
                 </div>
               )}

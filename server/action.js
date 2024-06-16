@@ -16,16 +16,61 @@ async function sha256(message) {
     return hashHex;
 }
 
+var gdt = ""
+var gdf = ""
+var gres = []
+
 // Functions
-
-
 export async function getData(dat1) {
-    const startDate = '2005-03-26'
-    const endDate = '2005-03-31'
+    
+    const startDate = dat1.df
+    const endDate = dat1.dt
+    let hlist = dat1.hlist
+    let matchStage = {
+            startDate: {
+                $gte: new Date(startDate),
+                $lte: new Date(endDate)
+            },
+    }
+    if(hlist.includes('AG')){
+        matchStage.AGENCY_CODE = dat1.AG
+    }
+    if(hlist.includes('SC')){
+        matchStage.SHOP_CODE = parseInt(dat1.SC)
+    }
+    const res = await Delay.aggregate([
+        {
+            $addFields: {
+                startDate: { $dateFromString: { dateString: "$DEL_DATE" } }
+            }
+        },
+        {
+            $match: matchStage
+        },
+        {
+            $project: {
+                startDate: 0,
+                _id: 0
+            }
+        }
+    ]);
+    if (res.length == 0) {
+        return -1;
+    }
+    return res
+}
+
+
+export async function getData1(dat1) {
+    // const startDate = '2005-03-26'
+    // const endDate = '2005-03-31'
     // const shop = dat1.shopCode
-    // const startDate = dat1.from
-    // const endDate = dat1.to
-        var res = await Delay.aggregate([
+    const startDate = dat1.df
+    const endDate = dat1.dt
+    var res = []
+    if (startDate != gdf || endDate != gdt) {
+        console.log('New data')
+        res = await Delay.aggregate([
             {
                 $addFields: {
                     startDate: { $dateFromString: { dateString: "$DEL_DATE" } }
@@ -46,35 +91,44 @@ export async function getData(dat1) {
                 }
             }
         ]);
-        if (res.length == 0) {
-            return -1;
-        }
-        let hlist = dat1.hlist
-        let temp = []
-        if (hlist.includes('CD')) {
-            temp = res.filter(r => r.CD)
-            res = temp
-        }
-        if (hlist.includes('AG')) {
-            temp = res.filter(r => r.AGENCY_CODE === dat1.AG)
-            res = temp
-        }
-        if (hlist.includes('SC')) {
-            temp = res.filter(r => r.SHOP_CODE === parseInt(dat1.SC))
-            res = temp
-        }
-        if (hlist.includes('CY')) {
-            temp = res.filter(r => r.CY)
-            res = temp
-        }
-        if (hlist.includes('RW')) {
-            temp = res.filter(r => r.CD)
-            res = temp
-        }
-        if (res.length == 0) {
-            return -1;
-        }
-        return res
+        gdf = startDate
+        gdt = endDate
+        gres = res
+
+    }
+    else {
+        console.log('Old Data')
+        res = gres
+    }
+    if (res.length == 0) {
+        return -1;
+    }
+    let hlist = dat1.hlist
+    let temp = []
+    if (hlist.includes('CD')) {
+        temp = res.filter(r => r.CD)
+        res = temp
+    }
+    if (hlist.includes('AG')) {
+        temp = res.filter(r => r.AGENCY_CODE === dat1.AG)
+        res = temp
+    }
+    if (hlist.includes('SC')) {
+        temp = res.filter(r => r.SHOP_CODE === parseInt(dat1.SC))
+        res = temp
+    }
+    if (hlist.includes('CY')) {
+        temp = res.filter(r => r.CY)
+        res = temp
+    }
+    if (hlist.includes('RW')) {
+        temp = res.filter(r => r.CD)
+        res = temp
+    }
+    if (res.length == 0) {
+        return -1;
+    }
+    return res
 
 }
 
@@ -91,6 +145,8 @@ export async function credCheck(uname, pass) {
 }
 
 
-export async function addData({sc, eqpt, fdel, tdel, deldate, ddel}){
-    Delay.create({others : {SHOP_CODE : parseInt(sc), EQPT: eqpt, DEL_DATE: deldate, REMARKS : ddel, DELAY_FROM : fdel, DELAY_TO : tdel}})
+export async function addData({ sc, eqpt, fdel, tdel, deldate, ddel }) {
+    deldate = deldate.split('-')
+    deldate = deldate[2] + '-' + deldate[1] + '-' + deldate[0]
+    User.create({ others: { SHOP_CODE: parseInt(sc), EQPT: eqpt, DEL_DATE: deldate, REMARKS: ddel, DELAY_FROM: fdel, DELAY_TO: tdel } })
 }

@@ -89,13 +89,13 @@ export default function LoginForm() {
             </div>
             {log ? (<Button className="w-full" onClick={check}>
               Login
-            </Button>) : (<Button className="w-full flex gap-4">
+            </Button>) : (<Button disabled className="w-full flex gap-4">
               <div class="loader">
                 <span class="bar"></span>
                 <span class="bar"></span>
                 <span class="bar"></span>
               </div>
-              Login
+              Verifying...
             </Button>)}
 
             <Button variant="outline" className="w-full">
