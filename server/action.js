@@ -57,6 +57,7 @@ export async function getData(dat1) {
     if (res.length == 0) {
         return -1;
     }
+    console.log('hiii')
     return res
 }
 

@@ -6,7 +6,7 @@ import { toast } from '@/components/ui/use-toast'
 import React, { useEffect, useState } from 'react'
 import { ComboboxDemo } from '../Components/autocomplete'
 
-export function Delayhandler({ hhlander }) {
+export function Delayhandler({ hhlander, XAxisHandler }) {
 
     const [hlist, setHlist] = useState([])
     const [cy, setcy] = useState(null)
@@ -19,6 +19,7 @@ export function Delayhandler({ hhlander }) {
     const [hobj, setHobj] = useState({})
     const [flag, setFlag] = useState(false)
     const [sec, setsec] = useState(true)
+
     function Checker(dt, df){
         let y1 = parseInt(dt.split('-')[0])
         let y2 = parseInt(dt.split('-')[0])
@@ -161,6 +162,26 @@ export function Delayhandler({ hhlander }) {
         }
     }
 
+    function heavy1(e){
+        const {value} = e.target
+        // console.log(value)
+        if(value == 'AG'){
+
+            XAxisHandler("AGENCY_CODE")
+        }
+        if(value == 'SC'){
+
+            XAxisHandler("SHOP_CODE")
+        }
+        if(value == 'AG'){
+
+            XAxisHandler("AGENCY_CODE")
+        }
+        if(value == "DATE"){
+            XAxisHandler("DEL_DATE")
+        }
+    }
+
 
 
     return (
@@ -171,6 +192,30 @@ export function Delayhandler({ hhlander }) {
                 <input value={df} onChange={(e) => { setFlag(!flag); setdf(e.target.value) }} className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50" type="date" id="dateInput" name="dateInput" pattern="\d{2}/\d{2}/\d{4}" placeholder="mm/dd/yyyy" required />
                 <Label htmlFor="model">To : </Label>
                 <input value={dt} onChange={(e) => { setFlag(!flag); setdt(e.target.value) }} className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50" type="date" id="dateInput" name="dateInput" pattern="\d{2}/\d{2}/\d{4}" placeholder="mm/dd/yyyy" required />
+            </div>
+            <Label htmlFor="temperature">X -Axis Parameter??</Label>
+            <div className="DelayPrefernces gap-5">
+                <div className="flex gap-2 items-center">
+                    Default ( Date )<input type="radio" name="X_AXIS" id="id1"   className="peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground" value='DATE' onChange={heavy1} />
+                </div>
+                <div className="flex gap-2 items-center">
+                    Continued<input type="radio" name="X_AXIS" id="id2"  className="peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground" value='CD' onChange={heavy1} />
+                </div>
+                <div className="flex gap-1 items-center">
+                    Conveyor<input type="radio" name="X_AXIS" id="id3" className="peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground" id="include" value='CY' onChange={heavy1} />
+                </div>
+                <div className="flex gap-2 items-center">
+                    Raw Materials<input type="radio" name="X_AXIS" id="id4" className="peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground" id="include" value='RW' onChange={heavy1} />
+                </div>
+                <div className="flex gap-2 items-center">
+                    Shop Code<input type="radio" name="X_AXIS" id="id5" className="peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground" id="include" value='SC' onChange={heavy1} />
+                </div>
+                <div className="flex gap-2 items-center">
+                    Agency<input type="radio" name="X_AXIS" id="id6" className="peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground" id="include" value='AG' onChange={heavy1} />
+                </div>
+                {/* <select className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50">
+                    <option value="">Shop Code Delays</option>
+                  </select> */}
             </div>
             <Label htmlFor="temperature">Delay Preferences??</Label>
             <div className="DelayPrefernces gap-5">

@@ -67,6 +67,7 @@ export default function Dashboard({ className }: DashboardProps) {
   const { toast } = useToast()
   const [rep, setRep] = useState<DataResponse>(false);
   const [tog, setTog] = useState(true);
+  const [ddata, setDdata] = useState(null);
 
 
   useEffect(() => {
@@ -121,6 +122,10 @@ export default function Dashboard({ className }: DashboardProps) {
       setRep(false);
     }
   }
+}
+
+function XAxisHandler(val){
+  setDdata(prev => val)
 }
 
 return (
@@ -221,7 +226,7 @@ return (
               <legend className="-ml-1 px-1 text-sm font-medium">
                 Statistics
               </legend>
-              <Delayhandler hhlander={hhlander} />
+              <Delayhandler hhlander={hhlander} XAxisHandler={XAxisHandler} />
               <div>
                 {tog ? (
                   
@@ -263,7 +268,7 @@ return (
             <>
               {tog ? (
                 <div className="gph1-con">
-                  <Graph res={rep} />
+                  <Graph res={rep} ddata={ddata} />
                 </div>
               ) : (
                 <div className="tab-con">
